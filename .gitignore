@@ -1,0 +1,10 @@
+.idea
+.env
+__pycache__
+.venv
+*.pyc
+*.db
+*.eim
+node_modules/
+dist/
+.DS_Store
