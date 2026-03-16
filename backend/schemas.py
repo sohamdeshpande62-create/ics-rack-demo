@@ -6,6 +6,7 @@
 import re
 from pydantic import BaseModel, Field, field_validator, model_validator
 from typing import Optional, Literal
+from datetime import datetime
 
 
 # Item Schemas
@@ -13,11 +14,14 @@ class ItemCreate(BaseModel):
     """Schema for creating a new Item"""
     rack_id: int = Field(ge=1, le=99) # Dropdown menu
     row_id: str = Field(min_length = 1, max_length = 1) # Dropdown menu
+
     name: str = Field(min_length=1, max_length=30)
     label: str = Field(min_length = 1, max_length = 30) # Dropdown menu
+
     slot: int = Field(ge=1, le=99)
     led_start: int
     led_end: int
+
     is_active: bool = True
 
 
@@ -39,10 +43,22 @@ class ItemUpdate(BaseModel): # Inherits from BaseModel due to optional parameter
     is_active: Optional[bool] = None
 
 
+    # Includes None validation as fields are optional
+    @model_validator(mode = 'after')
+    def validate_led_range(self):
+        if self.led_start is not None and self.led_start < 0:
+            raise ValueError('led_start cannot be negative')
+        if self.led_start is not None and self.led_end is not None:
+            if self.led_end < self.led_start:
+                raise ValueError('led_end cannot be less than led_start')
+        return self
+
+
 class ItemResponse(ItemCreate):
     """Schema for response returned when item is created or updated"""
     item_id: int
     position: str = Field(min_length = 2, max_length = 3) # Calculated from row_id and slot
+
     led_length: int
     color_r: int
     color_g: int
@@ -73,8 +89,28 @@ class RowCreate(BaseModel):
 
 
 class RowResponse(RowCreate):
-    row_id: str = Field(min_length=1, max_length=1)
+    """Schema for response returned when Row is created"""
+    row_id: str
+
 
     class Config:
         """Allows for reading data from ORM object not plain dict"""
+        from_attributes = True
+
+
+# Rack Schemas
+class RackCreate(BaseModel):
+    """Schema for creating a new Rack"""
+    name: str = Field(min_length=1, max_length=20)
+    locked: bool = False
+
+
+class RackResponse(RackCreate):
+    """Schema for response returned when Rack is created"""
+    rack_id: int
+    locked_at: Optional[datetime] = None
+
+
+    class Config:
+        """Allows for reading data from ORm object not plain dict"""
         from_attributes = True
