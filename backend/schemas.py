@@ -22,11 +22,11 @@ class ItemCreate(BaseModel):
     led_start: int
     led_end: int
 
-    is_active: bool = True
+    is_active: Optional[bool] = True
 
 
     @model_validator(mode = 'after')
-    def validate_led_range(self):
+    def validate_led_range(self) -> ItemCreate:
         if self.led_start < 0:
             raise ValueError('led_start cannot be negative')
         if self.led_end < self.led_start:
@@ -45,7 +45,7 @@ class ItemUpdate(BaseModel): # Inherits from BaseModel due to optional parameter
 
     # Includes None validation as fields are optional
     @model_validator(mode = 'after')
-    def validate_led_range(self):
+    def validate_led_range(self) -> ItemCreate:
         if self.led_start is not None and self.led_start < 0:
             raise ValueError('led_start cannot be negative')
         if self.led_start is not None and self.led_end is not None:
@@ -66,7 +66,7 @@ class ItemResponse(ItemCreate):
 
 
     @field_validator('position')
-    def validate_position(cls, v):
+    def validate_position(cls, v) -> str:
         if not re.match(r'^[A-Z]\d+$', v):
             raise ValueError('Position must be in format A1, B2 etc')
         return v.upper()
