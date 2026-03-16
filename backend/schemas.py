@@ -4,34 +4,36 @@
 # Imports
 
 import re
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from typing import Optional, Literal
 
 
 # Item Schemas
 class ItemCreate(BaseModel):
     """Schema for creating a new Item"""
+    rack_id: int = Field(ge=1, le=99) # Dropdown menu
+    row_id: str = Field(min_length = 1, max_length = 1) # Dropdown menu
     name: str = Field(min_length=1, max_length=30)
-    label: str = Field(min_length = 1, max_length = 30)
-    slot: int
-    position: str = Field(min_length=2, max_length=3)
+    label: str = Field(min_length = 1, max_length = 30) # Dropdown menu
+    slot: int = Field(ge=1, le=99)
     led_start: int
     led_end: int
     is_active: bool = True
 
 
-    @field_validator('position')
-    def validate_position(self, v):
-        if not re.match(r'^[A-Z]\d+$', v):
-            raise ValueError('Position must be in format A1, B2 etc')
-        return v.upper()
+    @model_validator(mode = 'after')
+    def validate_led_range(self):
+        if self.led_start < 0:
+            raise ValueError('led_start cannot be negative')
+        if self.led_end < self.led_start:
+            raise ValueError('led_end cannot be less than led_start')
+        return self
 
 
-class ItemUpdate(BaseModel): # Inherits from BaseModel not ItemBase due to optional parameters
+class ItemUpdate(BaseModel): # Inherits from BaseModel due to optional parameters
     """Schema for updating existing item, all fields are optional"""
     name: Optional[str] = None
     slot: Optional[int] = None
-    position: Optional[str] = None
     led_start: Optional[int] = None
     led_end: Optional[int] = None
     is_active: Optional[bool] = None
@@ -40,12 +42,19 @@ class ItemUpdate(BaseModel): # Inherits from BaseModel not ItemBase due to optio
 class ItemResponse(ItemCreate):
     """Schema for response returned when item is created or updated"""
     item_id: int
-    rack_id: int
-    row_id: str = Field(min_length=1, max_length=1)
+    position: str = Field(min_length = 2, max_length = 3) # Calculated from row_id and slot
     led_length: int
     color_r: int
     color_g: int
     color_b: int
+
+
+    @field_validator('position')
+    def validate_position(cls, v):
+        if not re.match(r'^[A-Z]\d+$', v):
+            raise ValueError('Position must be in format A1, B2 etc')
+        return v.upper()
+
 
     class Config:
         """Allows for reading data from ORM object not plain dict"""
@@ -59,7 +68,9 @@ class RowCreate(BaseModel):
     led_offset: int
     direction: Literal['ltr', 'rtl'] = 'ltr'
 
+
 # No update schema for Row as LED strip configuration will not change on racks once setup
+
 
 class RowResponse(RowCreate):
     row_id: str = Field(min_length=1, max_length=1)
