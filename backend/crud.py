@@ -11,18 +11,24 @@ from sqlalchemy import select, insert, update, delete
 # Item Functions
 
 """
-database for all
-create_item(ItemCreate) -> ItemResponse
-get_item(item_id) -> ItemResponse
-get_all_items(rack_id) -> list[ItemResponse]
-get_item_by_row(row_id) -> list[ItemResponse]
 update_item(item_id, ItemUpdate) -> ItemResponse
 delete_item(item_id) -> DeleteResponse
 """
 
 
-
 async def create_item(db: Database, item: ItemCreate) -> ItemResponse:
+    """
+    Creates an item specified by ItemCreate schema
+    Creates position dynamically based on row_id and slot
+
+    Args:
+        db: Database object
+        item: ItemCreate schema
+
+    Returns:
+        ItemResponse: Schema for response
+    """
+
     table = Item.__table__
     position = f'{item.row_id}{item.slot}' # Formats the position A1, B4, C2 etc.
     led_length = item.led_end - item.led_start
@@ -46,21 +52,73 @@ async def create_item(db: Database, item: ItemCreate) -> ItemResponse:
     return ItemResponse.model_validate(response)
 
 
-async def get_item(item_id: int, db: Database) -> ItemResponse:
+async def get_item(db: Database, item_id: int) -> ItemResponse | None:
+    """
+    Gets an item specified by item_id
+
+    Args:
+        db: Database object
+        item_id: primary key for item
+
+    Returns:
+        ItemResponse: Schema for response
+    """
+
+    table = Item.__table__
+    select_query = select(table).where(table.c.item_id == item_id)
+    response = await db.fetch_one(select_query)
+    if response is None:
+        return None
+    return ItemResponse.model_validate(response)
+
+
+async def get_item_by_row(db: Database, row_id: str) -> list[ItemResponse] | None:
+    """
+        Gets a list of items specified by row_id
+
+        Args:
+            db: Database object
+            row_id: foreign key for item
+
+        Returns:
+            ItemResponse: Schema for response
+        """
+
+    table = Item.__table__
+    select_query = select(table).where(table.c.row_id == row_id)
+    response = await db.fetch_all(select_query)
+    if not response:
+        return None
+
+    response_list = [ItemResponse.model_validate(x) for x in response]
+    return response_list
+
+
+async def get_all_items(db: Database, rack_id: int) -> list[ItemResponse] | None:
+    """
+    Gets a list of items specified by rack_id
+
+    Args:
+        db: Database object
+        rack_id: foreign key for item
+
+    Returns:
+        ItemResponse: Schema for response
+    """
+
+    table = Item.__table__
+    select_query = select(table).where(table.c.rack_id == rack_id)
+    response = await db.fetch_all(select_query)
+    if not response:
+        return None
+
+    response_list = [ItemResponse.model_validate(x) for x in response]
+    return response_list
+
+
+async def update_item(db: Database, item_id: int, update_info: ItemUpdate) -> ItemResponse:
     pass
 
 
-async def get_item_by_row(row_id: str, db: Database) -> list[ItemResponse]:
-    pass
-
-
-async def get_all_items(rack_id: int, db: Database) -> list[ItemResponse]:
-    pass
-
-
-async def update_item(item_id: int, update_info: ItemUpdate, db: Database) -> ItemResponse:
-    pass
-
-
-async def delete_item(item_id: int, db: Database) -> DeleteResponse:
+async def delete_item(db: Database, item_id: int) -> DeleteResponse:
     pass
