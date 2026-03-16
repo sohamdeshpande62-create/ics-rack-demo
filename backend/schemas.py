@@ -19,6 +19,7 @@ class ItemCreate(BaseModel):
     led_end: int
     is_active: bool = True
 
+
     @field_validator('position')
     def validate_position(self, v):
         if not re.match(r'^[A-Z]\d+$', v):

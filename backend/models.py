@@ -20,7 +20,7 @@ class Item(Base):
 
     name = Column(String(30)) # Actual name of item i.e. Pulse Oximeter
     label = Column(String(30)) # Label used in AI i.e Pulse_Oximeter
-    slot = Column(Integer) # Corresponds to number on a row in rack |   [1]   |  2  |
+    slot = Column(Integer) # Corresponds to number on a row in rack |   [1]   |  2  | 3 |
     position = Column(String(3)) # Represents a position '{row_id}{slot}' i.e. A1, B4
 
     led_start = Column(Integer)
