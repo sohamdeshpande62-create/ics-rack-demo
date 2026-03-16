@@ -1,0 +1,55 @@
+# Established base model definitions for database
+# Item, Row, and Rack describe all the necessary elements for
+# a smart rack to operate
+
+# Imports
+
+from sqlalchemy import Boolean, String, Integer, Column, ForeignKey, DateTime
+from database import Base
+
+
+class Item(Base):
+    """Model for item table"""
+
+    __tablename__ = 'item'
+
+    item_id = Column(Integer, primary_key=True)
+    rack_id = Column(Integer, ForeignKey('rack.rack_id'))
+    row_id = Column(String, ForeignKey('row.row_id'))
+
+    name = Column(String) # Actual name of item i.e. Pulse Oximeter
+    label = Column(String) # Label used in AI i.e Pulse_Oximeter
+    slot = Column(Integer) # Corresponds to number on a row in rack |   [1]   |  2  |
+    position = Column(String) # Represents a position '{row_id}{slot}' i.e. A1, B4
+
+    led_start = Column(Integer)
+    led_end = Column(Integer)
+    led_length = Column(Integer)
+
+    color_r = Column(Integer, default=58)
+    color_g = Column(Integer, default=103)
+    color_b = Column(Integer, default=176)
+    is_active = Column(Boolean, default=True) # Represents if item is in active use
+
+
+class Row(Base):
+    """Model for row table"""
+
+    __tablename__ = 'row'
+
+    row_id = Column(String, primary_key=True) # Indexed by A, B, C...Z
+    total_leds = Column(Integer)
+    led_offset = Column(Integer)
+    direction = Column(String, default='ltr') # References which way the LEDs flow on rack
+                                              # left to right or right to left
+
+
+class Rack(Base):
+    """Model for rack table"""
+
+    __tablename__ = 'rack'
+
+    rack_id = Column(Integer, primary_key=True)
+    name = Column(String, default='Demo Rack')
+    locked = Column(Boolean, default=False) # True when database updates are in progress
+    locked_at = Column(DateTime, default=None)
