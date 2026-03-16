@@ -1,3 +1,4 @@
+# database.py -- Soham Deshpande, Intelligent Clinical Systems Inc. 2026
 # Database initialization for ics-rack-demo
 
 # Imports
