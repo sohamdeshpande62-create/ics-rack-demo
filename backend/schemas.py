@@ -112,5 +112,18 @@ class RackResponse(RackCreate):
 
 
     class Config:
-        """Allows for reading data from ORm object not plain dict"""
+        """Allows for reading data from ORM object not plain dict"""
         from_attributes = True
+
+
+# Delete Schema
+class DeleteResponse(BaseModel):
+    """Schema for response when deleting Item, Rack, or Row"""
+    item_id: Optional[int] = None
+    rack_id: Optional[int] = None
+    row_id: Optional[str] = None
+
+    item_name: Optional[str] = None
+    rack_name: Optional[str] = None
+
+    message: str # Deletion message human-readable
