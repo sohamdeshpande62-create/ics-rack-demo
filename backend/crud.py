@@ -5,10 +5,12 @@
 
 
 # Imports
+from datetime import datetime
 from databases import Database
 from backend.models import Item, Row, Rack
-from backend.schemas import ItemCreate, ItemUpdate, ItemResponse, DeleteResponse
-from sqlalchemy import select, insert, update, delete
+from backend.schemas import ItemCreate, ItemUpdate, ItemResponse, DeleteResponse, RowResponse, \
+    RowCreate, RackCreate, RackResponse
+from sqlalchemy import select, insert, update, delete, func
 
 
 # Item Functions
@@ -166,3 +168,133 @@ async def delete_item(db: Database, item_id: int) -> DeleteResponse:
                                      message=f'Item {item_id} deleted')
 
     return delete_response
+
+
+# Row Functions
+"""
+Read row -> for direction
+delete row -> duh
+"""
+
+async def create_row(db: Database, row: RowCreate) -> RowResponse:
+    """
+    Creates a row specified by row schema
+
+    Args:
+        db: Database object
+        row: RowCreate schema
+
+    Returns:
+        RowResponse: Schema for response
+    """
+
+    table = Row.__table__
+    count_query = select(func.count()).where(table.c.rack_id == row.rack_id)
+    count = await db.fetch_val(count_query) # Converts amount of rows into letter character [A-Z]
+
+    row_id = chr(65 + count)
+
+    insert_query = insert(table).values(row_id=row_id,
+                                        rack_id=row.rack_id,
+                                        total_leds=row.total_leds,
+                                        led_offset=row.led_offset,
+                                        direction=row.direction)
+    await db.execute(insert_query)
+
+    select_query = select(table).where(table.c.row_id == row_id)
+
+    response = await db.fetch_one(select_query)
+    return RowResponse.model_validate(response)
+
+
+async def get_row_direction(db: Database, row_id: int) -> str | None:
+    """
+    Gets row direction specified by row_id
+
+    Args:
+        db: Database object
+        row_id: primary key for row
+
+    Returns:
+        str: Row direction as 'ltr' or 'rtl':
+        left to right | right to left
+    """
+
+    table = Row.__table__
+    select_query = select(table.c.direction).where(table.c.row_id == row_id)
+    direction = await db.fetch_one(select_query)
+
+    if direction is None:
+        return None
+
+    return direction['direction']
+
+
+# Rack Functions
+async def create_rack(db: Database, rack: RackCreate) -> RackResponse:
+    """
+    Creates a rack specified by rack schema
+
+    Args:
+        db: Database object
+        rack: RackCreate schema
+
+    Returns:
+        RackResponse: Schema for response
+    """
+
+    table = Rack.__table__
+    insert_query = insert(table).values(name=rack.name, locked=rack.locked)
+    rack_id = await db.execute(insert_query)
+
+    select_query = select(table).where(table.c.rack_id == rack_id)
+    response = await db.fetch_one(select_query)
+
+    return RackResponse.model_validate(response)
+
+
+async def get_lock_status(db: Database, rack_id: int) -> bool | None:
+    """
+    Gets lock status for rack specified by rack_id
+
+    Args:
+        db: Database object
+        rack_id: primary key for rack
+
+    Returns:
+        bool: Lock status as True | False
+    """
+
+    table = Rack.__table__
+    select_query = select(table.c.locked).where(table.c.rack_id == rack_id)
+    locked = await db.fetch_one(select_query)
+
+    if locked is None:
+        return None
+
+    return locked['locked']
+
+
+async def update_rack_lock_status(db: Database, rack_id: int, locked: bool) -> RackResponse:
+    """
+    Updates rack to lock from inference pipeline
+
+    Args:
+        db: Database
+        rack_id: primary key for rack
+        locked: status to lock or unlock
+
+    Returns:
+        RackResponse: Schema for response
+    """
+
+    table = Rack.__table__
+    locked_at = datetime.now() if locked else None
+
+    update_query = update(table).where(table.c.rack_id == rack_id).values(locked=locked, locked_at=locked_at)
+    await db.execute(update_query)
+
+    select_query = select(table).where(table.c.rack_id == rack_id)
+    response = await db.fetch_one(select_query)
+
+    return RackResponse.model_validate(response)

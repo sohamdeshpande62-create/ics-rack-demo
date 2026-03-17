@@ -80,6 +80,7 @@ class ItemResponse(ItemCreate):
 # Row Schemas
 class RowCreate(BaseModel):
     """Schema for creating a new Row"""
+    rack_id: int = Field(ge = 1, le = 99)  # Dropdown menu
     total_leds: int
     led_offset: int
     direction: Literal['ltr', 'rtl'] = 'ltr'
