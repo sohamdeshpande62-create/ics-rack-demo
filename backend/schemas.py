@@ -127,3 +127,13 @@ class DeleteResponse(BaseModel):
     item_name: Optional[str] = None
 
     message: str # Deletion message human-readable
+
+
+__all__ = [ItemCreate,
+           ItemUpdate,
+           ItemResponse,
+           RowCreate,
+           RowResponse,
+           RackCreate,
+           RackResponse,
+           DeleteResponse]
