@@ -124,6 +124,5 @@ class DeleteResponse(BaseModel):
     row_id: Optional[str] = None
 
     item_name: Optional[str] = None
-    rack_name: Optional[str] = None
 
     message: str # Deletion message human-readable
