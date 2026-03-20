@@ -19,3 +19,10 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 engine = create_engine(DATABASE_URL, connect_args={'check_same_thread' : False}) # Removes sqlite threading limitation
 Base = declarative_base()
 database = Database(DATABASE_URL)
+
+
+# Establish dynamic database connection
+async def get_db():
+    """Creates a fresh database instance for individual API calls"""
+    async with database:
+        yield database
