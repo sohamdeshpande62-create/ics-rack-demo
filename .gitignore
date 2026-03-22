@@ -9,3 +9,4 @@ node_modules/
 dist/
 .DS_Store
 file_structure.txt
+config.py
