@@ -16,3 +16,8 @@ database_manager = FastAPI(lifespan=lifespan)
 database_manager.include_router(items.router, prefix='/items')
 database_manager.include_router(rows.router, prefix='/rows')
 database_manager.include_router(racks.router, prefix='/racks')
+
+
+@database_manager.get('/')
+def home() -> str:
+    return 'Intelligent Clinical Systems Inc. Demo'

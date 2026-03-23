@@ -42,7 +42,7 @@ class Row(Base):
     __tablename__ = 'row'
 
     row_id = Column(String(1), primary_key=True) # Indexed by A, B, C...Z
-    rack_id = Column(Integer, ForeignKey('rack.rack_id'))
+    rack_id = Column(Integer, ForeignKey('rack.rack_id'), primary_key=True)
 
     total_leds = Column(Integer)
     led_offset = Column(Integer)

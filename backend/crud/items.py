@@ -28,7 +28,7 @@ async def create_item(db: AsyncSession, item: ItemCreate) -> ItemResponse:
     """
 
     position = f'{item.row_id}{item.slot}' # Formats the position A1, B4, C2 etc.
-    led_length = item.led_end - item.led_start
+    led_length = item.led_end - item.led_start + 1
 
     row_check = await db.execute(
         select(Row).where(Row.row_id == item.row_id, Row.rack_id == item.rack_id)
@@ -151,7 +151,7 @@ async def update_item(db: AsyncSession, item_id: int, update_info: ItemUpdate) -
     if 'led_start' in update_info or 'led_end' in update_info:
         new_start = update_info.get('led_start', current.led_start)
         new_end = update_info.get('led_end', current.led_end)
-        update_info['led_length'] = new_end - new_start
+        update_info['led_length'] = new_end - new_start + 1
 
 
     update_query = update(Item).where(Item.item_id == item_id).values(**update_info)
