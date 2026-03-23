@@ -5,7 +5,8 @@
 
 # Imports
 
-from sqlalchemy import Boolean, String, Integer, Column, ForeignKey, DateTime
+from sqlalchemy import Boolean, String, Integer, Column, ForeignKey, DateTime, ForeignKeyConstraint, \
+    UniqueConstraint
 from backend.database import Base
 
 
@@ -15,9 +16,10 @@ class Item(Base):
     __tablename__ = 'item'
 
     # Identifiers
-    item_id = Column(Integer, primary_key=True)
-    rack_id = Column(Integer, ForeignKey('rack.rack_id'))
-    row_id = Column(String(1), ForeignKey('row.row_id')) # Will be assigned based on slot and position chosen.
+    item_id = Column(Integer, primary_key=True, autoincrement=True)
+
+    rack_id = Column(Integer)
+    row_id = Column(String(1))
 
     name = Column(String(30)) # Actual name of item i.e. Pulse Oximeter
     label = Column(String(30)) # Label used in AI i.e Pulse_Oximeter
@@ -35,6 +37,13 @@ class Item(Base):
 
     is_active = Column(Boolean, default=True) # Represents if item is in active use
 
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ['rack_id', 'row_id'],
+            ['row.rack_id', 'row.row_id']
+        ),
+        UniqueConstraint('rack_id', 'row_id', 'slot')
+    )
 
 class Row(Base):
     """Model for row table"""

@@ -11,9 +11,9 @@ from typing import Literal
 # Row Schemas
 class RowCreate(BaseModel):
     """Schema for creating a new Row"""
-    rack_id: int = Field(ge = 1, le = 99)  # Dropdown menu
+    rack_id: int = Field(ge=1, le=99)  # Dropdown menu
     total_leds: int
-    led_offset: int
+    led_offset: int = Field(ge=0)
     direction: Literal['ltr', 'rtl'] = 'ltr'
 
 

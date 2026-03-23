@@ -44,20 +44,21 @@ async def create_row(db: AsyncSession, row: RowCreate) -> RowResponse:
     return RowResponse.model_validate(new_row)
 
 
-async def get_row_direction(db: AsyncSession, row_id: int) -> str | None:
+async def get_row_direction(db: AsyncSession, row_id: str, rack_id: int) -> str | None:
     """
     Gets row direction specified by row_id
 
     Args:
         db: Database object
         row_id: primary key for row
+        rack_id: primary key for rack
 
     Returns:
         str: Row direction as 'ltr' or 'rtl':
         left to right | right to left
     """
 
-    select_query = select(Row.direction).where(Row.row_id == row_id)
+    select_query = select(Row.direction).where(Row.row_id == row_id, Row.rack_id == rack_id)
     res = await db.execute(select_query)
     direction = res.scalar_one_or_none()
 
