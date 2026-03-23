@@ -1,4 +1,4 @@
-# rack_schemas.py -- Soham Deshpande, Intelligent Clinical Systems Inc. 2026
+# racks.py -- Soham Deshpande, Intelligent Clinical Systems Inc. 2026
 # Schema definitions for API calls for Rack objects
 
 

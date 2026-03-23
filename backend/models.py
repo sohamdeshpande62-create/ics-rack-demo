@@ -6,7 +6,7 @@
 # Imports
 
 from sqlalchemy import Boolean, String, Integer, Column, ForeignKey, DateTime
-from database import Base
+from backend.database import Base
 
 
 class Item(Base):
@@ -56,6 +56,6 @@ class Rack(Base):
     __tablename__ = 'rack'
 
     rack_id = Column(Integer, primary_key=True)
-    name = Column(String(20), default='Demo Rack')
+    name = Column(String(20), unique=True)
     locked = Column(Boolean, default=False) # True when database updates are in progress
     locked_at = Column(DateTime, default=None)

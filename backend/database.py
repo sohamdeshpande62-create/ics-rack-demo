@@ -3,26 +3,32 @@
 
 # Imports
 
-import os
-from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from backend.core.config import DATABASE_URL
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base
-from databases import Database
+from sqlalchemy.engine import Engine
+from sqlalchemy import event
 
 
-# Load .env variables
-load_dotenv()
-DATABASE_URL = os.getenv('DATABASE_URL')
-
-
-# Create database entry point
-engine = create_engine(DATABASE_URL, connect_args={'check_same_thread' : False}) # Removes sqlite threading limitation
+# Create database entry point and session
+engine = create_async_engine(DATABASE_URL)
 Base = declarative_base()
-database = Database(DATABASE_URL)
+session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 # Establish dynamic database connection
 async def get_db():
-    """Creates a fresh database instance for individual API calls"""
-    async with database:
-        yield database
+    async with session() as db:
+        try:
+            yield db
+        except Exception:
+            await db.rollback()
+            raise
+
+
+# Enforces foreign key constraints with every database connection
+@event.listens_for(Engine, 'connect')
+def set_sqlite_pragma(db, _):
+    cursor = db.cursor()
+    cursor.execute('PRAGMA foreign_keys=ON')
+    cursor.close()

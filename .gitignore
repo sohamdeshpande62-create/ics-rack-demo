@@ -8,5 +8,5 @@ __pycache__
 node_modules/
 dist/
 .DS_Store
-file_structure.txt
+STRUCTURE.txt
 config.py

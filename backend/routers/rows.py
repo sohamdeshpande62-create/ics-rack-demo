@@ -8,10 +8,10 @@
 
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.exc import IntegrityError, OperationalError, InterfaceError, DatabaseError
+from sqlalchemy.ext.asyncio import AsyncSession
 from backend import crud
 from backend.database import get_db
-from databases import Database
-from backend.schemas import *
+from backend.schemas.rows import RowCreate, RowResponse
 
 
 # Bind router into FastAPI app with /items path defaulted
@@ -20,13 +20,13 @@ router = APIRouter()
 
 # POST for /rows
 @router.post('', status_code=status.HTTP_201_CREATED)
-async def create_row(row: RowCreate, db: Database=Depends(get_db)) -> RowResponse:
+async def create_row(row: RowCreate, db: AsyncSession=Depends(get_db)) -> RowResponse:
     """POST endpoint for creating a row"""
     try:
         return await crud.create_row(db, row)
 
     except IntegrityError:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Row already exists')
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Row creation failed: check inputs')
 
     except (OperationalError, InterfaceError, DatabaseError) as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -35,7 +35,7 @@ async def create_row(row: RowCreate, db: Database=Depends(get_db)) -> RowRespons
 
 # GET for /rows
 @router.get('/{row_id}', status_code=status.HTTP_200_OK)
-async def get_row_direction(row_id: str, db: Database=Depends(get_db)) -> str | None:
+async def get_row_direction(row_id: str, db: AsyncSession=Depends(get_db)) -> str | None:
     """GET endpoint for getting row direction specified by row_id"""
     try:
         direction = await crud.get_row_direction(db, row_id)

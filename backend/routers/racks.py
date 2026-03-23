@@ -8,10 +8,10 @@
 
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.exc import IntegrityError, OperationalError, InterfaceError, DatabaseError
+from sqlalchemy.ext.asyncio import AsyncSession
 from backend import crud
 from backend.database import get_db
-from databases import Database
-from backend.schemas import *
+from backend.schemas.racks import RackCreate, RackResponse
 
 
 # Bind router into FastAPI app with /items path defaulted
@@ -20,13 +20,13 @@ router = APIRouter()
 
 # POST for /racks
 @router.post('', status_code=status.HTTP_201_CREATED)
-async def create_rack(rack: RackCreate, db: Database=Depends(get_db)) -> RackResponse:
+async def create_rack(rack: RackCreate, db: AsyncSession=Depends(get_db)) -> RackResponse:
     """POST endpoint for creating a rack"""
     try:
         return await crud.create_rack(db, rack)
 
     except IntegrityError:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Rack already exists')
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Rack creation failed: check inputs')
 
     except (OperationalError, InterfaceError, DatabaseError) as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -35,7 +35,7 @@ async def create_rack(rack: RackCreate, db: Database=Depends(get_db)) -> RackRes
 
 # GET for /racks
 @router.get('/{rack_id}/lock-status', status_code=status.HTTP_200_OK)
-async def get_lock_status(rack_id: int, db: Database=Depends(get_db)) -> bool | None:
+async def get_lock_status(rack_id: int, db: AsyncSession=Depends(get_db)) -> bool | None:
     """GET endpoint for seeing lock status for specified rack"""
     try:
         lock_status = await crud.get_lock_status(db, rack_id)
@@ -52,12 +52,16 @@ async def get_lock_status(rack_id: int, db: Database=Depends(get_db)) -> bool | 
 
 # PUT for /racks
 @router.put('/{rack_id}/update-lock-status', status_code=status.HTTP_200_OK)
-async def update_rack_lock_status(rack_id: int, locked: bool, db: Database=Depends(get_db)) -> RackResponse:
+async def update_rack_lock_status(rack_id: int, locked: bool, db: AsyncSession=Depends(get_db)) -> RackResponse:
     """PUT endpoint for updating lock status of specified rack"""
     try:
-        return await crud.update_rack_lock_status(db, rack_id, locked)
+        lock = await crud.update_rack_lock_status(db, rack_id, locked)
+        if lock is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = 'Rack lock status failed: check inputs')
+        else:
+            return lock
 
-    except IntegrityError as e:
+    except IntegrityError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Rack lock status update failed')
 
     except (OperationalError, InterfaceError, DatabaseError) as e:

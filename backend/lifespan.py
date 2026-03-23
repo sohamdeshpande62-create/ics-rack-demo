@@ -5,13 +5,12 @@
 # Imports
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from backend.database import Base, engine, database
+from backend.database import Base, engine
 
 
 # Lifespan function defining startup and shutdown sequence for API app
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(engine)
-    await database.connect()
+    async with engine.begin() as db:
+        await db.run_sync(Base.metadata.create_all)
     yield
-    await database.disconnect()

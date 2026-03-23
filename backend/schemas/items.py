@@ -1,4 +1,4 @@
-# item_schemas.py -- Soham Deshpande, Intelligent Clinical Systems Inc.
+# items.py -- Soham Deshpande, Intelligent Clinical Systems Inc.
 # Schema definitions for API calls for Item objects
 
 
@@ -43,7 +43,7 @@ class ItemUpdate(BaseModel): # Inherits from BaseModel due to optional parameter
     """Schema for updating existing item, all fields are optional"""
     row_id: Optional[str] = None
     name: Optional[str] = None
-    slot: Optional[int] = None
+    slot: Optional[int] = Field(default=None, ge=1, le=99)
     led_start: Optional[int] = None
     led_end: Optional[int] = None
     is_active: Optional[bool] = None
