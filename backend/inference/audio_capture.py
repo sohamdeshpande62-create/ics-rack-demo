@@ -1,4 +1,4 @@
-# audio_capture.py
+# audio_capture.py -- Soham Deshpande, Intelligent Clinical Systems Inc.
 # This file sets up an AudioCapture object to capture chunks of audio
 # through auto-detected mic or indexed mic.
 # Running this file directly will print all available mics
@@ -9,15 +9,10 @@
 
 import pyaudio
 import numpy as np
+from backend.core.config import SAMPLE_RATE, CHANNELS, CHUNK_SIZE
 
 
-# Constants
-
-SAMPLE_RATE = 16000
-CHUNK_SIZE = 1024
-CHANNELS = 1
 FORMAT = pyaudio.paInt16
-
 
 # Auto Detecting will not display all mic options
 # Run this file to display all options

@@ -1,4 +1,4 @@
-# inference_model.py
+# inference_model.py -- Soham Deshpande, Intelligent Clinical Systems Inc.
 # This file houses and runs the Edge Impulse Model
 # Running this file will run a demo in the shell to text model viability
 
@@ -6,15 +6,9 @@
 # Imports
 
 import numpy as np
-from pathlib import Path
 from edge_impulse_linux.audio import AudioImpulseRunner
-from item_map import CONFIDENCE_THRESHOLD
+from backend.core.config import CONFIDENCE_LEVEL, MODEL_PATH
 from typing import Any
-
-
-# Constants
-
-MODEL_PATH = Path('/Users/sohamdeshpande/DocumentsInternal/IntelligentClinicalSystems/EIM_Demo/Model/EIM/voice_guidance_demo.eim')
 
 
 class Inference:
@@ -74,11 +68,10 @@ class Inference:
         best_confidence = classification[best_label]
 
         # Debugging to show live confidence values
-
         #print(f'Inference :  {classification}')
 
         # Filter out noise and low confidence results
-        if best_label == 'Noise' or best_confidence < CONFIDENCE_THRESHOLD:
+        if best_label == 'Noise' or best_confidence < CONFIDENCE_LEVEL:
             return None, None
 
         return best_label, best_confidence

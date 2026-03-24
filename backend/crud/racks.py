@@ -55,6 +55,24 @@ async def get_lock_status(db: AsyncSession, rack_id: int) -> bool | None:
         return locked
 
 
+async def get_rack_count(db: AsyncSession) -> int:
+    """
+    Gets amount of racks in table
+
+    Args:
+        db: Database object
+
+    Returns:
+        int: Count of racks
+    """
+
+    select_query = select(Rack)
+    res = await db.execute(select_query)
+    response = res.scalars().all()
+
+    return len(response)
+
+
 async def update_rack_lock_status(db: AsyncSession, rack_id: int, locked: bool) -> RackResponse:
     """
     Updates rack to lock from inference pipeline

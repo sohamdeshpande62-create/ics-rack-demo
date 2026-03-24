@@ -5,12 +5,27 @@
 # Imports
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from backend.database import Base, engine
+from backend import crud
+from backend.events import pipeline_event
+from backend.database import Base, engine, session
+import asyncio
+from backend.inference_pipeline import run_pipeline
 
 
 # Lifespan function defining startup and shutdown sequence for API app
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # startup
     async with engine.begin() as db:
         await db.run_sync(Base.metadata.create_all)
+
+    pipeline_task = asyncio.create_task(run_pipeline())
+
+    async with session() as db:
+        if await crud.get_rack_count(db) > 0:
+            pipeline_event.set()
+
     yield
+
+    pipeline_task.cancel()
+    await asyncio.gather(pipeline_task, return_exceptions = True)

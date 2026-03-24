@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError, OperationalError, InterfaceError, Dat
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend import crud
 from backend.database import get_db
+from backend.events import pipeline_event
 from backend.schemas.racks import RackCreate, RackResponse
 
 
@@ -23,7 +24,9 @@ router = APIRouter()
 async def create_rack(rack: RackCreate, db: AsyncSession=Depends(get_db)) -> RackResponse:
     """POST endpoint for creating a rack"""
     try:
-        return await crud.create_rack(db, rack)
+        response = await crud.create_rack(db, rack)
+        pipeline_event.set()
+        return response
 
     except IntegrityError:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Rack creation failed: check inputs')
