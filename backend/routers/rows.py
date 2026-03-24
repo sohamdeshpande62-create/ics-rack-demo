@@ -34,7 +34,7 @@ async def create_row(row: RowCreate, db: AsyncSession=Depends(get_db)) -> RowRes
 
 
 # GET for /rows
-@router.get('/{row_id}{rack_id}', status_code=status.HTTP_200_OK)
+@router.get('/{row_id}/{rack_id}', status_code=status.HTTP_200_OK)
 async def get_row_direction(row_id: str, rack_id: int, db: AsyncSession=Depends(get_db)) -> str | None:
     """GET endpoint for getting row direction specified by row_id"""
     try:

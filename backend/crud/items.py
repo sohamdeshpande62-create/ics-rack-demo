@@ -81,15 +81,15 @@ async def get_item(db: AsyncSession, item_id: int) -> ItemResponse | None:
 
 async def get_item_by_row(db: AsyncSession, row_id: str) -> list[ItemResponse] | None:
     """
-        Gets a list of items specified by row_id
+    Gets a list of items specified by row_id
 
-        Args:
-            db: Database object
-            row_id: foreign key for item
+    Args:
+        db: Database object
+        row_id: foreign key for item
 
-        Returns:
-            ItemResponse: Schema for response
-        """
+    Returns:
+        ItemResponse: Schema for response
+    """
 
     select_query = select(Item).where(Item.row_id == row_id)
     res = await db.execute(select_query)
@@ -99,6 +99,28 @@ async def get_item_by_row(db: AsyncSession, row_id: str) -> list[ItemResponse] |
         return None
 
     return [ItemResponse.model_validate(x) for x in response] # Parse response list to create ItemResponse objects
+
+
+async def get_item_by_label(db: AsyncSession, label: str) -> list[ItemResponse] | None:
+    """
+    Gets a list of items specified by label
+
+    Args:
+        db: Database object
+        label: item label from inference model
+
+    Returns:
+        ItemResponse: Schema for response
+    """
+
+    select_query = select(Item).where(Item.label == label)
+    res = await db.execute(select_query)
+    response = res.scalars().all()
+
+    if not response:
+        return None
+
+    return [ItemResponse.model_validate(x) for x in response]
 
 
 async def get_all_items(db: AsyncSession, rack_id: int) -> list[ItemResponse] | None:

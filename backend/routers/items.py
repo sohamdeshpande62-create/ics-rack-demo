@@ -71,6 +71,22 @@ async def get_all_items(rack_id: int, db: AsyncSession=Depends(get_db)) -> list[
                             detail = f'Database error: {str(e)}')
 
 
+@router.get('/label/{label}', status_code=status.HTTP_200_OK)
+async def get_item_by_label(label: str, db: AsyncSession=Depends(get_db)):
+    """GET endpoint for getting all items with a specified label"""
+    try:
+        item = await crud.get_item_by_label(db, label)
+
+        if item is None:
+            raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = 'Item not found')
+        else:
+            return item
+
+    except (OperationalError, InterfaceError, DatabaseError) as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail = f'Database error: {str(e)}')
+
+
 @router.get('/{item_id}', status_code=status.HTTP_200_OK)
 async def get_item(item_id: int, db: AsyncSession=Depends(get_db)) -> ItemResponse:
     """GET endpoint for getting one item specified by item_id"""
