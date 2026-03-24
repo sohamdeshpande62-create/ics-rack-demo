@@ -1,6 +1,6 @@
 # rows.py -- Soham Deshpande, Intelligent Clinical Systems Inc. 2026
 # API endpoints for racks. Communication layer for requests to crud.py to database
-# handling and modification. Router handling is implemented in main.py
+# handling and modification. Router handling is implemented in database_manager.py
 # and row path /rows is binding there rather than specifying here
 
 

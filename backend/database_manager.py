@@ -1,4 +1,4 @@
-# main.py -- Soham Deshpande, Intelligent Clinical Systems Inc.
+# database_manager.py -- Soham Deshpande, Intelligent Clinical Systems Inc.
 # Entry point to API and routes all endpoints cleanly
 
 
