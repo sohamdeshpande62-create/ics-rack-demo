@@ -10,8 +10,8 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.exc import IntegrityError, OperationalError, InterfaceError, DatabaseError
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend import crud
-from backend.database import get_db
-from backend.events import pipeline_event
+from backend.main.database import get_db
+from backend.main.events import pipeline_event
 from backend.schemas.racks import RackCreate, RackResponse
 
 

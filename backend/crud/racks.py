@@ -7,7 +7,7 @@
 # Imports
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.models import Rack
+from backend.main.models import Rack
 from backend.schemas.racks import RackCreate, RackResponse
 from sqlalchemy import select, update
 from datetime import datetime

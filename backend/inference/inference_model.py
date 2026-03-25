@@ -71,7 +71,7 @@ class Inference:
         #print(f'Inference :  {classification}')
 
         # Filter out noise and low confidence results
-        if best_label == 'Noise' or best_confidence < CONFIDENCE_LEVEL:
+        if best_label == 'Noise' or best_label == 'Unknown' or best_confidence < CONFIDENCE_LEVEL:
             return None, None
 
         return best_label, best_confidence

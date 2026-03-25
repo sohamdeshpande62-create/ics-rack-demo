@@ -6,10 +6,10 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from backend import crud
-from backend.events import pipeline_event
-from backend.database import Base, engine, session
+from backend.main.events import pipeline_event
+from backend.main.database import Base, engine, session
 import asyncio
-from backend.inference_pipeline import run_pipeline
+from backend.main.inference_pipeline import run_pipeline
 
 
 # Lifespan function defining startup and shutdown sequence for API app

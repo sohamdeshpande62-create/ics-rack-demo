@@ -8,10 +8,11 @@
 import asyncio
 import numpy as np
 from backend.core.config import COOLDOWN_TIME, SAMPLE_RATE, CHUNK_SIZE, MIC_INDEX
-from backend.database import session
+from backend.main.database import session
 from backend.crud import get_item_by_label
 from backend.crud import get_lock_status
-from backend.events import pipeline_event
+from backend.main.events import pipeline_event
+from backend.led.led_controller import LEDController
 from backend.inference import AudioCapture
 from backend.inference import Inference
 
@@ -36,6 +37,7 @@ async def run_pipeline() -> None:
 
     capture = AudioCapture(MIC_INDEX)
     inference = Inference()
+    controller = LEDController()
 
     last_detection_time = 0.0
     last_label = None
@@ -45,10 +47,10 @@ async def run_pipeline() -> None:
         while True:
             async with session() as db:
                 locked = await get_lock_status(db, RACK_ID)
-                while locked is None or locked:
-                    await asyncio.sleep(0.1)
+                if locked is None or not locked:
+                    break
+                await asyncio.sleep(1.0)
 
-            async with session() as db:
                 capture.start()
                 inference.start()
                 print('Pipeline : Started')
@@ -58,6 +60,7 @@ async def run_pipeline() -> None:
                     if locked:
                         capture.stop()
                         inference.stop()
+                        controller.stop()
                         print('Pipeline : Shutdown, rack locked')
                         break
 
@@ -94,7 +97,13 @@ async def run_pipeline() -> None:
                         continue
 
                     for item in active_items:
-                        # TODO: trigger LED controller with item.led_start, item.led_end, item.color_r, item.color_g, item.color_b
+
+                        await controller.light_item(item.led_start,
+                                                    item.led_end,
+                                                    item.color_r,
+                                                    item.color_g,
+                                                    item.color_b)
+
                         print(f'Pipeline : LED trigger — item {item.name}, LEDs {item.led_start}–{item.led_end}')
 
     except asyncio.CancelledError:
@@ -103,4 +112,5 @@ async def run_pipeline() -> None:
     finally:
         capture.stop()
         inference.stop()
+        controller.stop()
         print('Pipeline : Shutdown complete')

@@ -7,7 +7,7 @@
 # Imports
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.models import Row
+from backend.main.models import Row
 from backend.schemas.rows import RowCreate, RowResponse
 from sqlalchemy import select, func
 

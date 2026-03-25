@@ -4,7 +4,7 @@
 
 # Imports
 from fastapi import FastAPI
-from backend.lifespan import lifespan
+from backend.main.lifespan import lifespan
 from backend.routers import items, rows, racks
 
 

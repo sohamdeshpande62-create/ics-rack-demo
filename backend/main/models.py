@@ -7,7 +7,7 @@
 
 from sqlalchemy import Boolean, String, Integer, Column, ForeignKey, DateTime, ForeignKeyConstraint, \
     UniqueConstraint
-from backend.database import Base
+from backend.main.database import Base
 
 
 class Item(Base):

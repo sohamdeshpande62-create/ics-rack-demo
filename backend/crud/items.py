@@ -7,7 +7,7 @@
 # Imports
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.models import Item, Row
+from backend.main.models import Item, Row
 from backend.schemas.items import ItemCreate, ItemUpdate, ItemResponse, DeleteResponse
 from sqlalchemy import select, update, delete
 from pydantic import ValidationError
