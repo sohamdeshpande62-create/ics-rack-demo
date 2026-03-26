@@ -11,7 +11,7 @@ import { useItems } from '../hooks/useItems.js'
 import { toAbsolute, toAbsoluteBottom, hasVisualOverlap, PLACE_LEDS } from '../utils/ledUtils.js'
 import '../styles/rack.css'
 
-const LABELS  = ['Pulse_Oximeter', 'EKG_Leads', 'Oxygen_Mask', 'Chest_Tube', 'Noise', 'Unknown']
+const LABELS  = ['Pulse_Oximeter', 'EKG_Leads', 'Oxygen_Mask', 'Chest_Tube']
 const RACK_ID = 1
 
 export default function RackManager() {
