@@ -14,3 +14,5 @@ dist/
 STRUCTURE.txt
 config.py
 .claude
+CLAUDE.md
+FRONTEND_SPEC.md
