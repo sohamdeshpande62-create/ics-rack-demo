@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
 import Logo from '../components/shared/Logo.jsx'
 import NodeBorder from '../components/shared/NodeBorder.jsx'
 import StatusBanner from '../components/shared/StatusBanner.jsx'
@@ -38,7 +38,8 @@ export default function RackManager() {
 
   // dnd-kit sensor: require 8px movement before drag activates (makes clicks still work)
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor,   { activationConstraint: { delay: 150, tolerance: 8 } })
   )
 
   // Remove from pending when item is confirmed in DB

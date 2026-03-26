@@ -10,6 +10,7 @@ export default function ItemCard({ item }) {
   const style = {
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.4 : 1,
+    touchAction: 'none',   // prevent browser scroll hijacking the drag on touch
   }
 
   return (

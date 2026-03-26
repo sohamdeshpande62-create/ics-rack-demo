@@ -118,7 +118,11 @@ function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onR
   const handleResizeStart = useCallback((e, side) => {
     e.preventDefault()
     e.stopPropagation()
-    const startX     = e.clientX
+    // Capture the pointer so subsequent move/up events fire even if the
+    // finger slides off the handle — critical for touch resizing
+    e.target.setPointerCapture(e.pointerId)
+
+    const startX      = e.clientX
     const startVStart = vStart
     const startVEnd   = vEnd
 
@@ -139,12 +143,12 @@ function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onR
     }
 
     const onUp = () => {
-      document.removeEventListener('mousemove', onMove)
-      document.removeEventListener('mouseup', onUp)
+      document.removeEventListener('pointermove', onMove)
+      document.removeEventListener('pointerup',   onUp)
     }
 
-    document.addEventListener('mousemove', onMove)
-    document.addEventListener('mouseup', onUp)
+    document.addEventListener('pointermove', onMove)
+    document.addEventListener('pointerup',   onUp)
   }, [vStart, vEnd, row, allItems, allRows, item, onResize])
 
   const inactive = confirmed && !item.is_active
@@ -154,7 +158,7 @@ function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onR
       className={`placed-item${confirmed ? ' placed-item--confirmed' : ' placed-item--pending'}${inactive ? ' placed-item--inactive' : ''}`}
       style={{ left, width }}
     >
-      <div className="resize-handle resize-handle--left"  onMouseDown={e => handleResizeStart(e, 'left')} />
+      <div className="resize-handle resize-handle--left"  style={{ touchAction: 'none' }} onPointerDown={e => handleResizeStart(e, 'left')} />
       <span className="placed-item__name">{item.name}</span>
       {!confirmed && (
         <button className="confirm-btn" onClick={() => onConfirm(item, row, vStart, vEnd)}>
@@ -174,7 +178,7 @@ function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onR
           {item.is_active ? 'Active' : 'Inactive'}
         </button>
       )}
-      <div className="resize-handle resize-handle--right" onMouseDown={e => handleResizeStart(e, 'right')} />
+      <div className="resize-handle resize-handle--right" style={{ touchAction: 'none' }} onPointerDown={e => handleResizeStart(e, 'right')} />
     </div>
   )
 }

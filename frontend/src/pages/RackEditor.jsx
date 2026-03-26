@@ -3,7 +3,7 @@
 // to item editing: add new items, reposition, resize, or delete.
 
 import { useState, useEffect, useCallback } from 'react'
-import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
 import Logo from '../components/shared/Logo.jsx'
 import NodeBorder from '../components/shared/NodeBorder.jsx'
 import StatusBanner from '../components/shared/StatusBanner.jsx'
@@ -35,7 +35,8 @@ export default function RackEditor() {
   const { items, refetch: refetchItems } = useItems(RACK_ID)
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor,   { activationConstraint: { delay: 150, tolerance: 8 } })
   )
 
   // On mount: load rows and lock the rack for editing
