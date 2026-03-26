@@ -1,0 +1,19 @@
+[Unit]
+Description=ICS Rack API
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/ics/ics-rack-demo
+ExecStart=/home/ics/ics-rack-demo/.venv/bin/uvicorn \
+    backend.main.database_manager:database_manager \
+    --host 0.0.0.0 \
+    --port 8000
+Restart=always
+RestartSec=2
+Environment=PYTHONPATH=/home/ics/ics-rack-demo
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Application
+Name=ICS Rack Display
+Exec=chromium-browser --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble http://localhost:5173/

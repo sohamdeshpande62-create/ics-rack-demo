@@ -1,0 +1,15 @@
+[Unit]
+Description=ICS Rack Frontend
+After=ics-api.service
+Wants=ics-api.service
+
+[Service]
+Type=simple
+User=ics
+WorkingDirectory=/home/ics/ics-rack-demo/frontend
+ExecStart=/usr/bin/npm run dev
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
