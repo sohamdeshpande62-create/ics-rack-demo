@@ -21,7 +21,7 @@ const ICS_BLUE = 'rgb(58, 103, 176)'
 const LED_RED  = '#e53e3e'
 
 // Single row drop zone with LED dots and placed/pending item overlays
-function RowBand({ row, placedItems, pendingItems, onResize, onConfirm, onUnplace, allRows }) {
+function RowBand({ row, placedItems, pendingItems, onResize, onConfirm, onUnplace, onToggleActive, allRows }) {
   const { setNodeRef, isOver } = useDroppable({ id: `row-${row.row_id}` })
   const bandRef = useRef(null)
 
@@ -80,6 +80,7 @@ function RowBand({ row, placedItems, pendingItems, onResize, onConfirm, onUnplac
               onResize={onResize}
               onConfirm={onConfirm}
               onUnplace={onUnplace}
+              onToggleActive={onToggleActive}
             />
           )
         })}
@@ -110,7 +111,7 @@ function RowBand({ row, placedItems, pendingItems, onResize, onConfirm, onUnplac
   )
 }
 
-function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onResize, onConfirm, onUnplace }) {
+function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onResize, onConfirm, onUnplace, onToggleActive }) {
   const left  = vStart * LED_PX
   const width = (vEnd - vStart + 1) * LED_PX
 
@@ -146,9 +147,11 @@ function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onR
     document.addEventListener('mouseup', onUp)
   }, [vStart, vEnd, row, allItems, allRows, item, onResize])
 
+  const inactive = confirmed && !item.is_active
+
   return (
     <div
-      className={`placed-item${confirmed ? ' placed-item--confirmed' : ' placed-item--pending'}`}
+      className={`placed-item${confirmed ? ' placed-item--confirmed' : ' placed-item--pending'}${inactive ? ' placed-item--inactive' : ''}`}
       style={{ left, width }}
     >
       <div className="resize-handle resize-handle--left"  onMouseDown={e => handleResizeStart(e, 'left')} />
@@ -163,6 +166,14 @@ function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onR
           Move
         </button>
       )}
+      {confirmed && onToggleActive && (
+        <button
+          className={`active-toggle${item.is_active ? ' active-toggle--on' : ' active-toggle--off'}`}
+          onClick={() => onToggleActive(item)}
+        >
+          {item.is_active ? 'Active' : 'Inactive'}
+        </button>
+      )}
       <div className="resize-handle resize-handle--right" onMouseDown={e => handleResizeStart(e, 'right')} />
     </div>
   )
@@ -172,7 +183,7 @@ function PlacedItem({ item, vStart, vEnd, row, confirmed, allItems, allRows, onR
 // DndContext lives in the parent (RackManager / RackEditor) so that
 // draggable ItemCards in the left panel share the same drag context
 // as these droppable row bands.
-export default function RackView({ rows, items, pendingItems, onResize, onConfirm, onUnplace }) {
+export default function RackView({ rows, items, pendingItems, onResize, onConfirm, onUnplace, onToggleActive }) {
   const placedItems = items.filter(i => !(i.led_start === 0 && i.led_end === 0))
 
   return (
@@ -189,6 +200,7 @@ export default function RackView({ rows, items, pendingItems, onResize, onConfir
             onResize={onResize}
             onConfirm={onConfirm}
             onUnplace={onUnplace}
+            onToggleActive={onToggleActive}
             allRows={rows}
           />
         </div>

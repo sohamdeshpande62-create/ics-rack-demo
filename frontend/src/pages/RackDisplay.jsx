@@ -61,7 +61,7 @@ export default function RackDisplay() {
 
         {/* Right 40%: Status stack */}
         <section className="display-right">
-          <StatusPanel rackId={RACK_ID} rackName="Rack 1" />
+          <StatusPanel rackId={RACK_ID} />
 
           <div className={`active-item-panel${faded ? ' active-item-panel--faded' : ''}`}>
             <p className="active-item-panel__label">Last Detected</p>

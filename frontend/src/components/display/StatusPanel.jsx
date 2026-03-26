@@ -1,14 +1,22 @@
 import { useEffect, useState } from 'react'
-import { getLockStatus } from '../../api/client.js'
+import { getRack, getLockStatus } from '../../api/client.js'
 
-export default function StatusPanel({ rackId, rackName }) {
-  const [locked, setLocked] = useState(null)
+export default function StatusPanel({ rackId }) {
+  const [rackName, setRackName] = useState(null)   // null = loading, false = not found
+  const [locked,   setLocked]   = useState(null)
 
+  // Fetch rack name once on mount
+  useEffect(() => {
+    getRack(rackId)
+      .then(r => setRackName(r.name))
+      .catch(() => setRackName(false))
+  }, [rackId])
+
+  // Poll lock status
   useEffect(() => {
     const poll = async () => {
       try {
-        const status = await getLockStatus(rackId)
-        setLocked(status)
+        setLocked(await getLockStatus(rackId))
       } catch {
         // silently ignore polling errors
       }
@@ -18,9 +26,15 @@ export default function StatusPanel({ rackId, rackName }) {
     return () => clearInterval(interval)
   }, [rackId])
 
+  const displayName = rackName === null
+    ? '…'
+    : rackName === false
+      ? 'Rack not set up'
+      : rackName
+
   return (
     <div className="status-panel">
-      <h2 className="status-panel__name">{rackName || `Rack ${rackId}`}</h2>
+      <h2 className="status-panel__name">{displayName}</h2>
       <div className="status-panel__indicator">
         <span
           className="status-dot"

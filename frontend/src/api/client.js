@@ -18,6 +18,9 @@ async function request(method, path, body = null) {
 export const createRack = (name) =>
   request('POST', '/racks', { name, locked: false })
 
+export const getRack = (rackId) =>
+  request('GET', `/racks/${rackId}`)
+
 export const getLockStatus = (rackId) =>
   request('GET', `/racks/${rackId}/lock-status`)
 

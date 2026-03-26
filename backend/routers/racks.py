@@ -36,6 +36,20 @@ async def create_rack(rack: RackCreate, db: AsyncSession=Depends(get_db)) -> Rac
                             detail=f'Database error: {str(e)}')
 
 
+# GET rack details
+@router.get('/{rack_id}', status_code=status.HTTP_200_OK)
+async def get_rack(rack_id: int, db: AsyncSession=Depends(get_db)) -> RackResponse:
+    """GET endpoint for fetching rack details (name, lock status)."""
+    try:
+        rack = await crud.get_rack(db, rack_id)
+        if rack is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Rack not found')
+        return rack
+    except (OperationalError, InterfaceError, DatabaseError) as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail=f'Database error: {str(e)}')
+
+
 # GET for /racks
 @router.get('/{rack_id}/lock-status', status_code=status.HTTP_200_OK)
 async def get_lock_status(rack_id: int, db: AsyncSession=Depends(get_db)) -> bool | None:

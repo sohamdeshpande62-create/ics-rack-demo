@@ -15,14 +15,14 @@
 
 /* Left panel */
 .left-panel {
-  width: 340px;
+  width: 260px;
   flex-shrink: 0;
-  padding: 20px;
+  padding: 16px;
   overflow-y: auto;
   border-right: 1px solid var(--node-gray);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 /* Stage cards */
@@ -206,7 +206,7 @@
 .divider-leds {
   display: flex;
   align-items: center;
-  height: 16px;
+  height: 22px;
   background: #2d3748;
   border-radius: 3px;
   border: 1px solid #1a202c;
@@ -238,7 +238,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  height: 64px;
+  height: 88px;
   border-radius: 0;
   border-left: 1px solid var(--node-gray);
   border-right: 1px solid var(--node-gray);
@@ -254,10 +254,10 @@
   background: var(--ics-blue-light);
 }
 
-/* LED dots */
+/* LED dots — width/height must match LED_PX in ledUtils.js */
 .led-dot {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,23 +291,29 @@
   border: 2px solid var(--ics-blue);
 }
 
+.placed-item--inactive {
+  background: #718096 !important;
+  border-color: #4a5568 !important;
+  opacity: 0.6;
+}
+
 .placed-item__name {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   color: #fff;
   pointer-events: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 20px;
+  padding: 0 24px;
 }
 
-/* Resize handles */
+/* Resize handles — wide enough for touch */
 .resize-handle {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 10px;
+  width: 18px;
   cursor: ew-resize;
   background: rgba(255,255,255,0.25);
   border-radius: 3px;
@@ -324,15 +330,15 @@
 /* Confirm button */
 .confirm-btn {
   position: absolute;
-  bottom: -28px;
+  bottom: -34px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--ics-blue);
   color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 3px 10px;
-  font-size: 11px;
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -345,15 +351,15 @@
 /* Unplace button (edit mode — appears on confirmed items) */
 .unplace-btn {
   position: absolute;
-  bottom: -28px;
+  bottom: -34px;
   left: 50%;
   transform: translateX(-50%);
   background: #4a5568;
   color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 3px 10px;
-  font-size: 11px;
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -361,6 +367,36 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
 }
 .unplace-btn:hover { opacity: 0.85; }
+
+/* Active/inactive toggle — appears on confirmed items in edit mode */
+.active-toggle {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: none;
+  border-radius: 10px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  z-index: 20;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  font-family: var(--font);
+}
+
+.active-toggle--on {
+  background: #38a169;
+  color: #fff;
+}
+
+.active-toggle--off {
+  background: #718096;
+  color: #fff;
+}
+
+.active-toggle:hover { opacity: 0.85; }
 
 /* Staging item row (item card + delete button) */
 .staging-item-row {

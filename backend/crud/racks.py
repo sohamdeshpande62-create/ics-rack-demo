@@ -55,6 +55,15 @@ async def get_lock_status(db: AsyncSession, rack_id: int) -> bool | None:
         return locked
 
 
+async def get_rack(db: AsyncSession, rack_id: int) -> RackResponse | None:
+    """Returns the full rack record for rack_id, or None if not found."""
+    res = await db.execute(select(Rack).where(Rack.rack_id == rack_id))
+    rack = res.scalar_one_or_none()
+    if rack is None:
+        return None
+    return RackResponse.model_validate(rack)
+
+
 async def get_rack_count(db: AsyncSession) -> int:
     """
     Gets amount of racks in table

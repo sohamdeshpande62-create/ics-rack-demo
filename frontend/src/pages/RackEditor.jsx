@@ -162,6 +162,16 @@ export default function RackEditor() {
     }
   }, [refetchItems])
 
+  // Toggle is_active without moving the item
+  const handleToggleActive = useCallback(async (item) => {
+    try {
+      await updateItem(item.item_id, { isActive: !item.is_active })
+      refetchItems()
+    } catch (e) {
+      setError(`Could not update item: ${e.message}`)
+    }
+  }, [refetchItems])
+
   // Unplace: send item back to staging (zero out both strips)
   const handleUnplace = useCallback(async (item) => {
     try {
@@ -312,6 +322,7 @@ export default function RackEditor() {
               onResize={handleResize}
               onConfirm={handleConfirm}
               onUnplace={handleUnplace}
+              onToggleActive={handleToggleActive}
             />
           </section>
         </main>

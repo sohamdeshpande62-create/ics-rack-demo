@@ -1,6 +1,6 @@
 // LED position utility functions shared between RackManager and RackEditor
 
-export const LED_PX = 20      // pixels per LED position
+export const LED_PX = 28      // pixels per LED position
 export const PLACE_LEDS = 5   // default width when an item is dropped
 
 // Convert visual (left-to-right display) position to absolute LED index on top strip
