@@ -33,7 +33,19 @@ async def create_row(row: RowCreate, db: AsyncSession=Depends(get_db)) -> RowRes
                             detail=f'Database error: {str(e)}')
 
 
-# GET for /rows
+# GET all rows for a rack
+@router.get('/rack/{rack_id}', status_code=status.HTTP_200_OK)
+async def get_rows_for_rack(rack_id: int, db: AsyncSession=Depends(get_db)) -> list[RowResponse]:
+    """GET endpoint for fetching all rows belonging to a rack"""
+    try:
+        return await crud.get_rows_for_rack(db, rack_id)
+
+    except (OperationalError, InterfaceError, DatabaseError) as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail=f'Database error: {str(e)}')
+
+
+# GET row direction
 @router.get('/{row_id}/{rack_id}', status_code=status.HTTP_200_OK)
 async def get_row_direction(row_id: str, rack_id: int, db: AsyncSession=Depends(get_db)) -> str | None:
     """GET endpoint for getting row direction specified by row_id"""

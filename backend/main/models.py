@@ -5,8 +5,7 @@
 
 # Imports
 
-from sqlalchemy import Boolean, String, Integer, Column, ForeignKey, DateTime, ForeignKeyConstraint, \
-    UniqueConstraint
+from sqlalchemy import Boolean, String, Integer, Column, ForeignKey, DateTime, ForeignKeyConstraint
 from backend.main.database import Base
 
 
@@ -24,12 +23,14 @@ class Item(Base):
     name = Column(String(30)) # Actual name of item i.e. Pulse Oximeter
     label = Column(String(30)) # Label used in AI i.e Pulse_Oximeter
 
-    slot = Column(Integer) # Corresponds to number on a row in rack |   [1]   |  2  | 3 |
-    position = Column(String(3)) # Represents a position '{row_id}{slot}' i.e. A1, B4
-
     led_start = Column(Integer)
     led_end = Column(Integer)
     led_length = Column(Integer)
+
+    # Bottom divider strip LEDs (the shelf below the item)
+    # Derived at placement time: offset = row.led_offset + row.total_leds, direction reversed
+    led_start_b = Column(Integer, default=0)
+    led_end_b   = Column(Integer, default=0)
 
     color_r = Column(Integer, default=58)
     color_g = Column(Integer, default=103)
@@ -42,7 +43,6 @@ class Item(Base):
             ['rack_id', 'row_id'],
             ['row.rack_id', 'row.row_id']
         ),
-        UniqueConstraint('rack_id', 'row_id', 'slot')
     )
 
 class Row(Base):

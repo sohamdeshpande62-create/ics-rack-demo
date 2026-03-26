@@ -4,7 +4,6 @@
 
 # Imports
 
-import re
 from pydantic import BaseModel, Field, field_validator, model_validator
 from typing import Optional
 
@@ -12,13 +11,12 @@ from typing import Optional
 # Item Schemas
 class ItemCreate(BaseModel):
     """Schema for creating a new Item"""
-    rack_id: int = Field(ge=1, le=99) # Dropdown menu
-    row_id: str = Field(min_length = 1, max_length = 1) # Dropdown menu
+    rack_id: int = Field(ge=1, le=99)
+    row_id: str = Field(min_length=1, max_length=1)
 
     name: str = Field(min_length=1, max_length=30)
-    label: str = Field(min_length = 1, max_length = 30) # Dropdown menu
+    label: str = Field(min_length=1, max_length=30)
 
-    slot: int = Field(ge=1, le=99)
     led_start: int
     led_end: int
 
@@ -30,8 +28,8 @@ class ItemCreate(BaseModel):
         return v.upper()
 
 
-    @model_validator(mode = 'after')
-    def validate_led_range(self) -> ItemCreate:
+    @model_validator(mode='after')
+    def validate_led_range(self) -> 'ItemCreate':
         if self.led_start < 0:
             raise ValueError('led_start cannot be negative')
         if self.led_end < self.led_start:
@@ -39,19 +37,19 @@ class ItemCreate(BaseModel):
         return self
 
 
-class ItemUpdate(BaseModel): # Inherits from BaseModel due to optional parameters
+class ItemUpdate(BaseModel):
     """Schema for updating existing item, all fields are optional"""
     row_id: Optional[str] = None
     name: Optional[str] = None
-    slot: Optional[int] = Field(default=None, ge=1, le=99)
     led_start: Optional[int] = None
     led_end: Optional[int] = None
+    led_start_b: Optional[int] = None
+    led_end_b: Optional[int] = None
     is_active: Optional[bool] = None
 
 
-    # Includes None validation as fields are optional
-    @model_validator(mode = 'after')
-    def validate_led_range(self) -> ItemCreate:
+    @model_validator(mode='after')
+    def validate_led_range(self) -> 'ItemUpdate':
         if self.led_start is not None and self.led_start < 0:
             raise ValueError('led_start cannot be negative')
         if self.led_start is not None and self.led_end is not None:
@@ -60,22 +58,22 @@ class ItemUpdate(BaseModel): # Inherits from BaseModel due to optional parameter
         return self
 
 
-class ItemResponse(ItemCreate):
+class ItemResponse(BaseModel):
     """Schema for response returned when item is created or updated"""
     item_id: int
-    position: str = Field(min_length = 2, max_length = 3) # Calculated from row_id and slot
-
+    rack_id: int
+    row_id: str
+    name: str
+    label: str
+    led_start: int
+    led_end: int
+    led_start_b: int
+    led_end_b: int
     led_length: int
     color_r: int
     color_g: int
     color_b: int
-
-
-    @field_validator('position')
-    def validate_position(cls, v) -> str:
-        if not re.match(r'^[A-Z]\d+$', v):
-            raise ValueError('Position must be in format A1, B2 etc')
-        return v.upper()
+    is_active: bool
 
 
     class Config:
@@ -92,4 +90,4 @@ class DeleteResponse(BaseModel):
 
     item_name: Optional[str] = None
 
-    message: str # Deletion message human-readable
+    message: str  # Deletion message human-readable

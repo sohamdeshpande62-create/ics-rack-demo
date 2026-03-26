@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError, OperationalError, InterfaceError, Dat
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend import crud
 from backend.main.database import get_db
-from backend.main.events import pipeline_event
+from backend.main.events import pipeline_event, last_detected
 from backend.schemas.racks import RackCreate, RackResponse
 
 
@@ -70,3 +70,10 @@ async def update_rack_lock_status(rack_id: int, locked: bool, db: AsyncSession=D
     except (OperationalError, InterfaceError, DatabaseError) as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail = f'Database error: {str(e)}')
+
+
+# GET last-detected item for the display screen (in-memory, not persisted)
+@router.get('/{rack_id}/last-detected', status_code=status.HTTP_200_OK)
+async def get_last_detected(rack_id: int):
+    """Returns the most recently inference-detected item (updated live by the pipeline)."""
+    return last_detected

@@ -1,6 +1,8 @@
 .idea
 .env
+**/.env
 __pycache__
+**/__pycache__
 .venv
 *.pyc
 *.db
@@ -11,3 +13,4 @@ dist/
 .DS_Store
 STRUCTURE.txt
 config.py
+.claude

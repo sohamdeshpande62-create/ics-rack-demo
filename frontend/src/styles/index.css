@@ -1,0 +1,145 @@
+/* index.css — Global styles, ICS design system */
+
+:root {
+  --ics-blue: rgb(58, 103, 176);
+  --ics-blue-light: rgba(58, 103, 176, 0.12);
+  --ics-blue-mid: rgba(58, 103, 176, 0.5);
+  --led-red: #e53e3e;
+  --text-dark: #1a1a2e;
+  --text-muted: #6b7280;
+  --bg-white: #ffffff;
+  --border-gray: #d1d5db;
+  --node-gray: #e2e8f0;
+  --success: #38a169;
+  --danger: #e53e3e;
+  --font: 'Inter', system-ui, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg-white);
+  color: var(--text-dark);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Page layout */
+.page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.node-border {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: center;
+  padding: 20px 24px 12px;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+/* Logo */
+.logo-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.logo-img {
+  height: 48px;
+  object-fit: contain;
+}
+
+.logo-tagline {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  font-style: italic;
+}
+
+/* Status banner */
+.status-banner {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.status-banner--error {
+  background: #fff5f5;
+  color: var(--danger);
+  border: 1px solid #feb2b2;
+}
+
+.status-banner--info {
+  background: #ebf4ff;
+  color: var(--ics-blue);
+  border: 1px solid #bee3f8;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+
+.btn:hover { opacity: 0.85; }
+.btn:active { opacity: 0.7; }
+
+.btn--primary {
+  background: var(--ics-blue);
+  color: #fff;
+}
+
+.btn--secondary {
+  background: var(--node-gray);
+  color: var(--text-dark);
+}
+
+.btn--danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn--exit {
+  background: var(--ics-blue);
+  color: #fff;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 14px;
+}

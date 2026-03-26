@@ -1,0 +1,424 @@
+/* rack.css — RackManager page, rack grid, LED dots, item cards */
+
+/* Page layout */
+.page--manager .page-header {
+  border-bottom: 1px solid var(--node-gray);
+}
+
+.manager-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  z-index: 1;
+  gap: 0;
+}
+
+/* Left panel */
+.left-panel {
+  width: 340px;
+  flex-shrink: 0;
+  padding: 20px;
+  overflow-y: auto;
+  border-right: 1px solid var(--node-gray);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Stage cards */
+.stage {
+  background: #f9fafb;
+  border: 1px solid var(--border-gray);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.stage--active {
+  border-color: var(--ics-blue);
+  background: #fff;
+}
+
+.stage--done {
+  opacity: 0.7;
+}
+
+.stage--locked {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.stage__title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dark);
+}
+
+.stage__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--ics-blue);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stage__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stage__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stage__form input,
+.stage__form select {
+  font-family: var(--font);
+  font-size: 14px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-gray);
+  border-radius: 6px;
+  color: var(--text-dark);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.stage__form input:focus,
+.stage__form select:focus {
+  border-color: var(--ics-blue);
+}
+
+.stage__summary {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Staging area */
+.staging-area {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-gray);
+}
+
+.staging-area__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+/* Item cards (staging) */
+.item-card {
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-card--staging {
+  background: var(--ics-blue-light);
+  border: 2px dashed var(--ics-blue);
+}
+
+.item-card__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.item-card__label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Rack grid warning */
+.rack-full-warning {
+  background: #fff5f5;
+  color: var(--danger);
+  border: 1px solid #feb2b2;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Right panel */
+.right-panel {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+  z-index: 1;
+}
+
+.rack-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Rack view */
+.rack-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Divider strip — represents the physical LED strip on a shelf edge */
+.divider-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.divider-label-spacer {
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.divider-leds {
+  display: flex;
+  align-items: center;
+  height: 16px;
+  background: #2d3748;
+  border-radius: 3px;
+  border: 1px solid #1a202c;
+  flex-shrink: 0;
+}
+
+.led-dot--divider {
+  background: rgba(255, 180, 0, 0.45) !important;
+}
+
+/* Row band */
+.row-band {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.row-label {
+  width: 28px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ics-blue);
+  flex-shrink: 0;
+}
+
+.row-leds {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 64px;
+  border-radius: 0;
+  border-left: 1px solid var(--node-gray);
+  border-right: 1px solid var(--node-gray);
+  border-top: none;
+  border-bottom: none;
+  background: #f9fafb;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.row-leds--over {
+  border-color: var(--ics-blue);
+  background: var(--ics-blue-light);
+}
+
+/* LED dots */
+.led-dot {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  /* Make dot smaller than its cell */
+  transform: scale(0.35);
+  transform-origin: center;
+}
+
+/* Placed items */
+.placed-item {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  cursor: default;
+}
+
+.placed-item--pending {
+  background: var(--ics-blue-mid);
+  border: 2px dashed var(--ics-blue);
+}
+
+.placed-item--confirmed {
+  background: var(--ics-blue);
+  border: 2px solid var(--ics-blue);
+}
+
+.placed-item__name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 20px;
+}
+
+/* Resize handles */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: ew-resize;
+  background: rgba(255,255,255,0.25);
+  border-radius: 3px;
+  z-index: 10;
+}
+
+.resize-handle--left { left: 0; border-radius: 4px 0 0 4px; }
+.resize-handle--right { right: 0; border-radius: 0 4px 4px 0; }
+
+.resize-handle:hover {
+  background: rgba(255,255,255,0.45);
+}
+
+/* Confirm button */
+.confirm-btn {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ics-blue);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  z-index: 20;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.confirm-btn:hover { opacity: 0.85; }
+
+/* Unplace button (edit mode — appears on confirmed items) */
+.unplace-btn {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4a5568;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  z-index: 20;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.unplace-btn:hover { opacity: 0.85; }
+
+/* Staging item row (item card + delete button) */
+.staging-item-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.staging-item-row .item-card {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* Small danger button */
+.btn--danger-sm {
+  flex-shrink: 0;
+  background: #e53e3e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font);
+}
+.btn--danger-sm:hover { opacity: 0.85; }
+
+/* Save success full-page screen */
+.save-success-screen {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.save-success-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.save-success-icon {
+  font-size: 48px;
+  color: var(--ics-blue);
+  line-height: 1;
+}
+.save-success-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+.save-success-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}

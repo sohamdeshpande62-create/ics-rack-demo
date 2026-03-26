@@ -1,0 +1,163 @@
+/* display.css — RackDisplay kiosk page */
+
+.page--display .page-header {
+  border-bottom: 1px solid var(--node-gray);
+}
+
+.display-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Left 60%: QR code */
+.display-left {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--node-gray);
+}
+
+.qr-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.qr-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.qr-url {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+/* Right 40%: status stack */
+.display-right {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px 28px;
+  overflow-y: auto;
+}
+
+/* Rack status panel */
+.status-panel {
+  padding: 20px;
+  background: #f9fafb;
+  border: 1px solid var(--node-gray);
+  border-radius: 12px;
+}
+
+.status-panel__name {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.status-panel__indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-panel__label {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* Active item panel */
+.active-item-panel {
+  padding: 20px;
+  background: #f9fafb;
+  border: 1px solid var(--node-gray);
+  border-radius: 12px;
+  transition: opacity 1s ease;
+}
+
+.active-item-panel--faded .active-item-panel__content {
+  opacity: 0;
+}
+
+.active-item-panel__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.active-item-panel__name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ics-blue);
+}
+
+.active-item-panel__sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Listening state */
+.listening {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.listening-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ics-blue);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.75); }
+}
+
+/* System controls */
+.system-controls {
+  padding: 16px 20px;
+  background: #f9fafb;
+  border: 1px solid var(--node-gray);
+  border-radius: 12px;
+}
+
+.rebooting-msg {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.confirm-reboot p {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.confirm-reboot__actions {
+  display: flex;
+  gap: 8px;
+}

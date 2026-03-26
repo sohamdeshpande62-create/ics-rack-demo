@@ -44,6 +44,24 @@ async def create_row(db: AsyncSession, row: RowCreate) -> RowResponse:
     return RowResponse.model_validate(new_row)
 
 
+async def get_rows_for_rack(db: AsyncSession, rack_id: int) -> list[RowResponse]:
+    """
+    Gets all rows for a given rack_id, ordered by row_id.
+
+    Args:
+        db: Database object
+        rack_id: primary key for rack
+
+    Returns:
+        list[RowResponse]: All rows belonging to this rack
+    """
+
+    select_query = select(Row).where(Row.rack_id == rack_id).order_by(Row.row_id)
+    res = await db.execute(select_query)
+    rows = res.scalars().all()
+    return [RowResponse.model_validate(r) for r in rows]
+
+
 async def get_row_direction(db: AsyncSession, row_id: str, rack_id: int) -> str | None:
     """
     Gets row direction specified by row_id

@@ -6,8 +6,14 @@
 # Imports
 
 import asyncio
-from rpi_ws281x import PixelStrip, Color
 from backend.core.config import LED_PIN, LED_TOTAL
+
+try:
+    from rpi_ws281x import PixelStrip, Color
+    _RPI_AVAILABLE = True
+except ImportError:
+    _RPI_AVAILABLE = False
+    print('LEDController : rpi_ws281x not available — running in stub mode (Mac/dev)')
 
 
 # Constants
@@ -25,23 +31,29 @@ class LEDController:
     def __init__(self):
         """Initializes the WS2812B LED strip"""
 
-        self._strip = PixelStrip(
-            LED_TOTAL,
-            LED_PIN,
-            LED_FREQ_HZ,
-            LED_DMA,
-            LED_INVERT,
-            LED_BRIGHTNESS,
-            LED_CHANNEL
-        )
-        self._strip.begin()
         self._timeout_task: asyncio.Task | None = None
-        print(f'LEDController : Strip initialized — {LED_TOTAL} LEDs on GPIO {LED_PIN}')
+        if _RPI_AVAILABLE:
+            self._strip = PixelStrip(
+                LED_TOTAL,
+                LED_PIN,
+                LED_FREQ_HZ,
+                LED_DMA,
+                LED_INVERT,
+                LED_BRIGHTNESS,
+                LED_CHANNEL
+            )
+            self._strip.begin()
+            print(f'LEDController : Strip initialized — {LED_TOTAL} LEDs on GPIO {LED_PIN}')
+        else:
+            self._strip = None
+            print('LEDController : Stub initialized')
 
 
     def _set_range(self, led_start: int, led_end: int, r: int, g: int, b: int) -> None:
         """Sets a range of LEDs to a color and shows immediately."""
 
+        if not _RPI_AVAILABLE:
+            return
         for i in range(led_start, led_end + 1):
             self._strip.setPixelColor(i, Color(r, g, b))
         self._strip.show()
@@ -50,6 +62,9 @@ class LEDController:
     def clear(self) -> None:
         """Turns off all LEDs on the strip."""
 
+        if not _RPI_AVAILABLE:
+            print('LEDController : Strip cleared (stub)')
+            return
         for i in range(LED_TOTAL):
             self._strip.setPixelColor(i, Color(0, 0, 0))
         self._strip.show()
