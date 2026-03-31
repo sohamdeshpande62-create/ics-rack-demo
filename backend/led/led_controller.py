@@ -56,7 +56,7 @@ class LEDController:
     def _set_range(self, led_start: int, led_end: int, r: int, g: int, b: int) -> None:
         """Sets a range of LEDs to a color and shows immediately."""
 
-        if not _RPI_AVAILABLE:
+        if self._strip is None:
             return
         for i in range(led_start, led_end + 1):
             self._strip.setPixelColor(i, Color(r, g, b))
@@ -66,7 +66,7 @@ class LEDController:
     def clear(self) -> None:
         """Turns off all LEDs on the strip."""
 
-        if not _RPI_AVAILABLE:
+        if self._strip is None:
             print('LEDController : Strip cleared (stub)')
             return
         for i in range(LED_TOTAL):
