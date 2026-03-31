@@ -33,17 +33,21 @@ class LEDController:
 
         self._timeout_task: asyncio.Task | None = None
         if _RPI_AVAILABLE:
-            self._strip = PixelStrip(
-                LED_TOTAL,
-                LED_PIN,
-                LED_FREQ_HZ,
-                LED_DMA,
-                LED_INVERT,
-                LED_BRIGHTNESS,
-                LED_CHANNEL
-            )
-            self._strip.begin()
-            print(f'LEDController : Strip initialized — {LED_TOTAL} LEDs on GPIO {LED_PIN}')
+            try:
+                self._strip = PixelStrip(
+                    LED_TOTAL,
+                    LED_PIN,
+                    LED_FREQ_HZ,
+                    LED_DMA,
+                    LED_INVERT,
+                    LED_BRIGHTNESS,
+                    LED_CHANNEL
+                )
+                self._strip.begin()
+                print(f'LEDController : Strip initialized — {LED_TOTAL} LEDs on GPIO {LED_PIN}')
+            except Exception as e:
+                self._strip = None
+                print(f'LEDController : Hardware init failed ({e}) — running in stub mode')
         else:
             self._strip = None
             print('LEDController : Stub initialized')
