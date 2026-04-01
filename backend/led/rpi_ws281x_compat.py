@@ -36,9 +36,12 @@ class _ws2811_channel_t(ctypes.Structure):
 
 class _ws2811_t(ctypes.Structure):
     _fields_ = [
-        ('freq',    ctypes.c_uint64),
-        ('dmanum',  ctypes.c_int),
-        ('channel', _ws2811_channel_t * 2),
+        ('render_wait_time', ctypes.c_uint64),   # time in µs before next render
+        ('device',           ctypes.c_void_p),   # private driver data
+        ('rpi_hw',           ctypes.c_void_p),   # RPI hardware info pointer
+        ('freq',             ctypes.c_uint32),   # output frequency
+        ('dmanum',           ctypes.c_int),      # DMA channel number
+        ('channel',          _ws2811_channel_t * 2),
     ]
 
 
