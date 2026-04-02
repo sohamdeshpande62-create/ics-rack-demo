@@ -41,6 +41,7 @@ async def run_pipeline() -> None:
 
     last_detection_time = 0.0
     last_label = None
+    pipeline_started = False
 
     try:
 
@@ -53,6 +54,7 @@ async def run_pipeline() -> None:
 
                 capture.start()
                 inference.start()
+                pipeline_started = True
                 print('Pipeline : Started')
 
                 while True:
@@ -110,7 +112,8 @@ async def run_pipeline() -> None:
         print('Pipeline : Cancelled, shutting down')
 
     finally:
-        capture.stop()
-        inference.stop()
+        if pipeline_started:
+            capture.stop()
+            inference.stop()
         controller.stop()
         print('Pipeline : Shutdown complete')
