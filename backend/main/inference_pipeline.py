@@ -128,6 +128,8 @@ async def run_pipeline() -> None:
 
                     for item in active_items:
 
+                        controller.clear() # Clear last lit item
+
                         # Light top divider strip
                         await controller.light_item(
                             item.led_start, item.led_end,
