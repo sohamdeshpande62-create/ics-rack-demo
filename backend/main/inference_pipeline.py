@@ -96,13 +96,14 @@ async def run_pipeline() -> None:
                     if not active_items:
                         continue
 
-                    for item in active_items:
+                    for i, item in enumerate(active_items):
 
                         await controller.light_item(item.led_start,
                                                     item.led_end,
                                                     item.color_r,
                                                     item.color_g,
-                                                    item.color_b)
+                                                    item.color_b,
+                                                    clear_first=(i == 0))
 
                         print(f'Pipeline : LED trigger — item {item.name}, LEDs {item.led_start}–{item.led_end}')
 

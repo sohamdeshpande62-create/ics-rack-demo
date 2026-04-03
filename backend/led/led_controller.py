@@ -66,7 +66,7 @@ class LEDController:
             pass
 
 
-    async def light_item(self, led_start: int, led_end: int, r: int, g: int, b: int) -> None:
+    async def light_item(self, led_start: int, led_end: int, r: int, g: int, b: int, clear_first: bool = False) -> None:
         """
         Lights a range of LEDs with the given color.
         Cancels any existing timeout and starts a fresh one.
@@ -78,14 +78,16 @@ class LEDController:
             r: Red value (0-255)
             g: Green value (0-255)
             b: Blue value (0-255)
+            clear_first: If True, clears all LEDs before lighting (use on first call per detection)
         """
 
-        # Cancel previous timeout and clear strip before lighting new item
+        # Cancel previous timeout if still running
         if self._timeout_task and not self._timeout_task.done():
             self._timeout_task.cancel()
             await asyncio.gather(self._timeout_task, return_exceptions=True)
 
-        self.clear()
+        if clear_first:
+            self.clear()
         self._set_range(led_start, led_end, r, g, b)
         print(f'LEDController : Lit LEDs {led_start}–{led_end} RGB({r},{g},{b})')
 
