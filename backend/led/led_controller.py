@@ -80,11 +80,12 @@ class LEDController:
             b: Blue value (0-255)
         """
 
-        # Cancel previous timeout if still running
+        # Cancel previous timeout and clear strip before lighting new item
         if self._timeout_task and not self._timeout_task.done():
             self._timeout_task.cancel()
             await asyncio.gather(self._timeout_task, return_exceptions=True)
 
+        self.clear()
         self._set_range(led_start, led_end, r, g, b)
         print(f'LEDController : Lit LEDs {led_start}–{led_end} RGB({r},{g},{b})')
 
