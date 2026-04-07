@@ -1,6 +1,6 @@
 # ICS Rack Demo
 
-A voice-activated medical supply rack management system built by Intelligent Clinical Systems Inc. The system uses a Raspberry Pi 5 to run real-time audio classification, control WS2812B LED strips, and serve a touch-friendly React UI. An iPad connects via a local WiFi hotspot to manage rack configuration while the Pi drives a kiosk display.
+A voice-activated medical supply rack management system built by Intelligent Clinical Systems Inc. The system uses a Raspberry Pi 5 to run real-time audio classification, control WS2812B LED strips, and serve a touch-friendly React UI. An iPad connects via a local Wi-Fi hotspot to manage rack configuration while the Pi drives a kiosk display.
 
 ---
 
@@ -27,7 +27,7 @@ A voice-activated medical supply rack management system built by Intelligent Cli
 ```
 
 **Workflow:**
-1. iPad connects to Pi's WiFi hotspot and opens the rack editor via QR code
+1. iPad connects to Pi's Wi-Fi hotspot and opens the rack editor via QR code
 2. Clinician configures the rack — rows, items, LED ranges, and AI labels
 3. Rack goes into running mode; Pi listens continuously via USB microphone
 4. Clinician says an item name (e.g., "Pulse Oximeter")
@@ -38,14 +38,14 @@ A voice-activated medical supply rack management system built by Intelligent Cli
 
 ## Hardware Requirements
 
-| Component | Details |
-|-----------|---------|
-| Raspberry Pi 5 | 4GB or 8GB RAM |
+| Component          | Details                                          |
+|--------------------|--------------------------------------------------|
+| Raspberry Pi 5     | 4GB or 8GB RAM                                   |
 | WS2812B LED strips | Daisy-chained, data on GPIO 18 (physical pin 12) |
-| USB microphone | Any USB mic; set `MIC_INDEX` in `.env` |
-| 5V power supply | For LED strips (external, shared ground with Pi) |
-| Display | HDMI touchscreen (Hosyond 7" or similar) |
-| WiFi | Pi's built-in WiFi used as hotspot |
+| USB microphone     | Any USB mic; set `MIC_INDEX` in `.env`           |
+| 5V power supply    | For LED strips (external, shared ground with Pi) |
+| Display            | HDMI touchscreen (Hosyond 7" or similar)         |
+| WiFi               | Pi's built-in WiFi used as hotspot               |
 
 ---
 
@@ -104,26 +104,26 @@ ics-rack-demo/
 **Base URL:** `http://192.168.4.1:8000`
 
 ### Racks
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/racks` | Create a new rack |
-| GET | `/racks/{id}/lock-status` | Get lock state (`true` = editing, `false` = running) |
-| PUT | `/racks/{id}/update-lock-status?locked={bool}` | Set lock state |
-| GET | `/racks/{id}/last-detected` | Get last detected item |
+| Method | Endpoint                                       | Description                                          |
+|--------|------------------------------------------------|------------------------------------------------------|
+| POST   | `/racks`                                       | Create a new rack                                    |
+| GET    | `/racks/{id}/lock-status`                      | Get lock state (`true` = editing, `false` = running) |
+| PUT    | `/racks/{id}/update-lock-status?locked={bool}` | Set lock state                                       |
+| GET    | `/racks/{id}/last-detected`                    | Get last detected item                               |
 
 ### Rows
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/rows` | Create a row (row_id auto-assigned A, B, C...) |
-| GET | `/rows/rack/{rack_id}` | Get all rows for a rack |
+| Method | Endpoint               | Description                                    |
+|--------|------------------------|------------------------------------------------|
+| POST   | `/rows`                | Create a row (row_id auto-assigned A, B, C...) |
+| GET    | `/rows/rack/{rack_id}` | Get all rows for a rack                        |
 
 ### Items
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/items` | Create an item |
-| GET | `/items/rack/{rack_id}` | Get all items on a rack |
-| PUT | `/items/{id}` | Update item (position, LED range, active status) |
-| DELETE | `/items/{id}` | Delete item |
+| Method | Endpoint                | Description                                      |
+|--------|-------------------------|--------------------------------------------------|
+| POST   | `/items`                | Create an item                                   |
+| GET    | `/items/rack/{rack_id}` | Get all items on a rack                          |
+| PUT    | `/items/{id}`           | Update item (position, LED range, active status) |
+| DELETE | `/items/{id}`           | Delete item                                      |
 
 ---
 
