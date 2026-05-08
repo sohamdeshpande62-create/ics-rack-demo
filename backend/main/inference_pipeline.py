@@ -126,9 +126,11 @@ async def run_pipeline() -> None:
                     if not active_items:
                         continue
 
+                    clear = False
                     for item in active_items:
-
-                        controller.clear() # Clear last lit item
+                        while not clear:
+                            controller.clear() # Clear last lit item
+                            clear = True
 
                         # Light top divider strip
                         await controller.light_item(
